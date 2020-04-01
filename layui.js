@@ -102,7 +102,18 @@
     //记录基础数据
     Layui.prototype.cache = config;
 
-    //定义模块
+    /** 
+     * javascript comment 
+     * @Author: 史林枫 
+     * @Date: 2020-04-01 17:59:54 
+     * @Desc: 定义模块
+     *  1. deps 是依赖的模块
+     *  2. factory 是回调函数
+     * 加载过程：
+     * 1.判断deps是否是function 如果是就是不依赖任何模块，deps就是factory
+     * 2.
+     * 
+     */
     Layui.prototype.define = function(deps, factory) {
         var that = this,
             type = typeof deps === 'function',
@@ -124,7 +135,8 @@
             factory = deps,
             deps = []
         );
-
+        //如果使用模块化加载，并且mobile模块已经加载 则调用回调函数       
+        //这个情况有待观察
         if ((!layui['layui.all'] && layui['layui.mobile'])) {
             return callback.call(that);
         }

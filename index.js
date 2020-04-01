@@ -3,6 +3,5 @@ layui.config({
     debug: true
 }).use(['layer'], function() {
     var layer = layui.layer;
-
     layer.msg("Hello world!");
 });
