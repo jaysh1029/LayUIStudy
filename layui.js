@@ -300,7 +300,13 @@
     //存储模块的回调
     config.callback = {};
 
-    //重新执行模块的工厂函数
+    /** 
+     * javascript comment 
+     * @Author: 史林枫 
+     * @Date: 2020-04-02 09:06:48 
+     * @Desc: 重新执行模块的工厂函数
+     * @Desc: 若layui中包含模块，并且config.callback含有此模块的函数，则返回这个函数 
+     */
     Layui.prototype.factory = function(modName) {
         if (layui[modName]) {
             return typeof config.callback[modName] === 'function' ?
@@ -309,12 +315,24 @@
         }
     };
 
-    //css内部加载器
+    /** 
+     * javascript comment 
+     * @Author: 史林枫 
+     * @Date: 2020-04-02 09:09:23 
+     * @Desc: css内部加载器 
+     * @Desc:  加载layui自带的css 内部调用layui.link
+     */
     Layui.prototype.addcss = function(firename, fn, cssname) {
         return layui.link(config.dir + 'css/' + firename, fn, cssname);
     };
 
-    //图片预加载
+    /** 
+     * javascript comment 
+     * @Author: 史林枫 
+     * @Date: 2020-04-02 09:11:41 
+     * @Desc: 图片预加载 
+     * @Desc: 创建Image对象，设置url 加载完成后执行callback，出错执行error 
+     */
     Layui.prototype.img = function(url, callback, error) {
         var img = new Image();
         img.src = url;
@@ -331,7 +349,13 @@
         };
     };
 
-    //全局配置
+    /** 
+     * javascript comment 
+     * @Author: 史林枫 
+     * @Date: 2020-04-02 09:12:37 
+     * @Desc: 全局配置 用外部options 覆盖内部config的相关键值 
+     * @Desc: 修改内部config对象
+     */
     Layui.prototype.config = function(options) {
         options = options || {};
         for (var key in options) {
@@ -340,7 +364,13 @@
         return this;
     };
 
-    //记录全部模块
+    /** 
+     * javascript comment 
+     * @Author: 史林枫 
+     * @Date: 2020-04-02 09:16:07 
+     * @Desc: 复制内部的modules对象 
+     * @Desc: 这里面都是内部模块 形如：layer: 'modules/layer'
+     */
     Layui.prototype.modules = function() {
         var clone = {};
         for (var o in modules) {
@@ -392,7 +422,14 @@
         return data;
     };
 
-    //URL 解析
+    /** 
+     * javascript comment 
+     * @Author: 史林枫 
+     * @Date: 2020-04-05 20:39:42 
+     * @Desc: URL 解析 将一个url 分解成 路径数组，参数数组，hash结构 
+     * @Desc: 如 URL：https://www.baidu.com/s/admin#/home/page/login?wd=test&ws=abc
+     * @Desc: 会被解析为 {"pathname":["s","admin#","home","page","login"],"search":{"wd":"test","ws":"abc"},"hash":{"path":["home","page","login?wd=test&ws=abc"],"search":{},"hash":"","href":"/home/page/login?wd=test&ws=abc"}}
+     */
     Layui.prototype.url = function(href) {
         var that = this,
             data = {
@@ -402,9 +439,11 @@
 
                         function() {
                             var pathUrl = (href.match(/\.[^.]+?\/.+/) || [])[0] || '';
+                            console.log(pathUrl);
                             return pathUrl.replace(/^[^\/]+/, '').replace(/\?.+/, '');
                         }() :
                         location.pathname;
+                        console.log(pathname);
                     return pathname.replace(/^\//, '').split('/');
                 }()
 
@@ -416,7 +455,7 @@
                             ((href.match(/\?.+/) || [])[0] || '') :
                             location.search
                         ).replace(/^\?+/, '').split('&'); //去除 ?，按 & 分割参数
-
+                    
                     //遍历分割后的参数
                     that.each(search, function(index, item) {
                         var _index = item.indexOf('='),
