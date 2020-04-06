@@ -349,7 +349,12 @@
         return clone;
     }();
 
-    //拓展模块
+    /** 
+     * javascript comment 
+     * @Author: 史林枫 
+     * @Date: 2020-04-05 08:41:06 
+     * @Desc: 拓展模块 将options中的模块放到内部modules对象里面(只记录一个名称和路径) 
+     */
     Layui.prototype.extend = function(options) {
         var that = this;
 
@@ -366,8 +371,19 @@
         return that;
     };
 
-    // location.hash 路由解析
+    /** 
+     * javascript comment 
+     * @Author: 史林枫 
+     * @Date: 2020-04-05 11:40:47 
+     * @Desc: location.hash 路由解析 返回一个路由的数据对象
+     * @Desc:  比如 hash = #/home/homepage1?name=tom 最后被转化为：
+     * @Desc: data: {path:{},search:{},hash:"",href:"/home/homepage1?name=tom"}
+     * @Desc: 如果这里hash 是 /#/home/homepage1?name=tom (比前面多一个/)
+     * @Desc: 此时 data.hash = #/home/homepage1?name=tom
+     */
     Layui.prototype.router = function(hash) {
+        // 以链接为例： http://www.xxx.com/start/#/home/homepage1
+
         var that = this,
             hash = hash || location.hash,
             data = {
@@ -375,13 +391,25 @@
                 search: {},
                 hash: (hash.match(/[^#](#.*$)/) || [])[1] || ''
             };
-
+        //data.hash中存放全部hash值
+        //如果 hash中不含有#/ 就直接返回，不再处理
         if (!/^#\//.test(hash)) return data; //禁止非路由规范
-        hash = hash.replace(/^#\//, '');
-        data.href = '/' + hash;
+        hash = hash.replace(/^#\//, ''); //若 hash以#/开头，则替换为空
+        data.href = '/' + hash; // 在hash开头加上/
+
+        /*
+         将hash中以#开头的内容全部替换掉
+         比如 hash=http://www.xxx.com/start/#/home/homepage1
+         替换后为http: //www.xxx.com/start/
+         但这里没什么用，可能会考虑到hash中有多个#的问题，系统只保留第一个后面的
+         比如 hash只原本为 #/test/test/test/#/test/  到这里已经被处理为
+         /test/test/test/#/test/   到下面一句处理之后就会变成 /test/test/test/
+        */
         hash = hash.replace(/([^#])(#.*$)/, '$1').split('/') || [];
 
-        //提取 Hash 结构
+
+        //提取 Hash 结构 
+        // 这里把hash中的参数放置到data.search中，非url参数 放入path中，作为路由
         that.each(hash, function(index, item) {
             /^\w+=/.test(item) ? function() {
                 item = item.split('=');
