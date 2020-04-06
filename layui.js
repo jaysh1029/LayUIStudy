@@ -110,20 +110,25 @@
      *  1. deps 是依赖的模块
      *  2. factory 是回调函数
      * 加载过程：
-     * 1.判断deps是否是function 如果是就是不依赖任何模块，deps就是factory
-     * 2.
+     * 1.判断deps是否是function 如果是就是不依赖任何模块，deps就是factory,即回调函数
+     * 2.不管是依赖的模块，还是新定义的模块，最后都要调用内部的callback，将输出的对象绑定到layui对象上，并设置config缓存和状态标识
      * 
      */
     Layui.prototype.define = function(deps, factory) {
         var that = this,
             type = typeof deps === 'function',
+            //这里的回调函数可以是use加载依赖模块时的回调，也是define定义新输出函数的回调
+            //目的是将模块绑定到layui对象，并设置config相关缓存
+            //其中会调用到factory这个函数，
             callback = function() {
+
                 var setApp = function(app, exports) {
                     layui[app] = exports;
                     config.status[app] = true;
                 };
                 typeof factory === 'function' && factory(function(app, exports) {
                     setApp(app, exports);
+                    //不知道为何设置这个函数 目前没有发现那个地方用到这个callback
                     config.callback[app] = function() {
                         factory(setApp);
                     }
@@ -141,20 +146,32 @@
             return callback.call(that);
         }
 
+        //加载依赖模块，并执行回调函数
         that.use(deps, callback);
         return that;
     };
 
-    //使用特定模块
+    /** 
+     * javascript comment 
+     * @Author: 史林枫 
+     * @Date: 2020-04-06 09:01:57 
+     * @Param: apps 模块名称可以是数组或字符串，但不能包含目录，如果是目录用extend来建立别名
+     * @Param: callback 模块加载完毕后的回调函数，返回一个exports参数，用于输出该模块接口
+     * @Param: exports 输出模块集合，作为回调函数的参数(这里可能是为了加入更多外部对象，因为内部的对象都绑在了layui对象上了)
+     * @Desc:  按照apps参数指定的模块 去递归加载相应的js模块
+     * @Desc: 所有模块加载完成后执行callback回调，开始使用这些模块
+     */
     Layui.prototype.use = function(apps, callback, exports) {
         var that = this,
+            //dir是layui.js的绝对路径
             dir = config.dir = config.dir ? config.dir : getPath,
             head = doc.getElementsByTagName('head')[0];
-
+        //确保apps参数是一个数组
         apps = typeof apps === 'string' ? [apps] : apps;
 
         //如果页面已经存在 jQuery 1.7+ 库且所定义的模块依赖 jQuery，则不加载内部 jquery 模块
         if (window.jQuery && jQuery.fn.on) {
+            //如果apps模块中包含jquery，则删除这个模块 
             that.each(apps, function(index, item) {
                 if (item === 'jquery') {
                     apps.splice(index, 1);
@@ -167,10 +184,14 @@
             timeout = 0;
         exports = exports || [];
 
-        //静态资源host
+        //静态资源host 如 //www.xxx.com/
         config.host = config.host || (dir.match(/\/\/([\s\S]+?)\//) || ['//' + location.host + '/'])[0];
 
-        //加载完毕
+        /*
+            加载完毕的回调函数
+            这个加载完成后，还要等待define函数执行，设置config.status[item]之后才算结束
+            然后执行内部回调函数 onCallback 继续递归加载或结束
+        */
         function onScriptLoad(e, url) {
             var readyRegExp = navigator.platform === 'PLaySTATION 3' ? /^complete$/ : /^(complete|loaded)$/
             if (e.type === 'load' || (readyRegExp.test((e.currentTarget || e.srcElement).readyState))) {
@@ -185,7 +206,9 @@
             }
         }
 
-        //回调
+        //回调函数，如果是多个模块则递归加载，否则就执行callback函数
+        //这个回调函数中的this 被指代为layui对象，
+        //如果回调中有参数的话，这个参数就是加载后的对象集合 可以直接使用
         function onCallback() {
             exports.push(layui[item]);
             apps.length > 1 ?
@@ -217,7 +240,12 @@
             config.modules[item] = url; //并记录起该扩展模块的 url
         }
 
-        //首次加载模块
+        /*
+            首次加载模块
+            创建script 监听js加载事件，执行回调函数
+            若非首次加载，就是config.modules[item]已经加载但还没有加载完成时，系统会等待其加载完成 
+            然后看config.status[item]是否有值，有值则完全加载完成，之后执行内部的回调函数onCallback
+        */
         if (!config.modules[item]) {
             var node = doc.createElement('script');
 
@@ -304,8 +332,9 @@
      * javascript comment 
      * @Author: 史林枫 
      * @Date: 2020-04-02 09:06:48 
-     * @Desc: 重新执行模块的工厂函数
+     * @Desc: 重新执行模块的工厂函数，实际上是一个回调函数 用来将模块绑定到layui对象以及设置config缓存的
      * @Desc: 若layui中包含模块，并且config.callback含有此模块的函数，则返回这个函数 
+     * @Desc: 这个函数好像没怎么用过，因为用use和define加载模块的时候已经执行过了
      */
     Layui.prototype.factory = function(modName) {
         if (layui[modName]) {
@@ -471,7 +500,7 @@
                             return pathUrl.replace(/^[^\/]+/, '').replace(/\?.+/, '');
                         }() :
                         location.pathname;
-                        console.log(pathname);
+                    console.log(pathname);
                     return pathname.replace(/^\//, '').split('/');
                 }()
 
@@ -483,7 +512,7 @@
                             ((href.match(/\?.+/) || [])[0] || '') :
                             location.search
                         ).replace(/^\?+/, '').split('&'); //去除 ?，按 & 分割参数
-                    
+
                     //遍历分割后的参数
                     that.each(search, function(index, item) {
                         var _index = item.indexOf('='),

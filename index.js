@@ -1,7 +1,6 @@
-layui.config({
-    version: '2.5.6',
-    debug: true
-}).use(['layer'], function() {
-    var layer = layui.layer;
-    layer.msg("Hello world!");
+layui.define(function(factory) {
+    'use strict';
+    factory("demo", function() {
+        alert("hello world!");
+    })
 });
