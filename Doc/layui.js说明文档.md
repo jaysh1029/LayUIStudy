@@ -12,8 +12,8 @@
 ## 公有对象/类：
 
 ### Layui   类：
-    v：             版本号
-    cache：         指向config
+    v：             版本号(属性)
+    cache：         指向config(属性)
     define：        定义并加载模块
     use:            加载模块
     getSyle:        获取html节点style属性的某个属性值
@@ -29,7 +29,7 @@
     data：          本地存储
     sessionData:    本地会话存储
     device：        设备信息
-    hint：          提示
+    hint：          错误提示(控制台)
     each：          遍历
     sort：          数组排序(按照某个成员)
     stope:          阻止事件冒泡
