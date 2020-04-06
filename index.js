@@ -5,6 +5,3 @@ layui.config({
     var layer = layui.layer;
     layer.msg("Hello world!");
 });
-
-var hash = "#/test/admin?ss=rr";
-console.log(hash.match(/[^#](#.*$)/));
