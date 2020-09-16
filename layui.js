@@ -765,7 +765,7 @@
     /** 
      * @Author: 史林枫 
      * @Date: 2020-09-16 17:18:21 
-     * @Desc: 自定义模块事件 执行时不带参数 
+     * @Desc: 自定义模块事件 这里只是监听 不执行
      */
     Layui.prototype.onevent = function (modName, events, callback) {
         if (typeof modName !== 'string' ||
@@ -781,7 +781,7 @@
      * @Param modName  如 admin 这是自己定义的模块名称
      * @Param events 如 tabsPage(setMenustatus) tabsPage({*}) 调用的是模块内定义的事件
      * @Param params 参数
-     * @param fn 回调函数
+     * @param fn 回调函数 fn有值 则是监听事件，若fn没有值，则是执行事件
      * @Desc:  执行自定义模块事件
      */
     Layui.prototype.event = Layui.event = function (modName, events, params, fn) {
@@ -789,7 +789,7 @@
             result = null,
             filter = events.match(/\((.*)\)$/) || [] //提取事件过滤器字符结构，如：select(xxx) 提取的是(xxx)
             ,
-            eventName = (modName + '.' + events).replace(filter[0], '') //获取事件名称，如：form.select
+            eventName = (modName + '.' + events).replace(filter[0], '') //获取事件名称，如：form.select admin.on
             ,
             filterName = filter[1] || '' //获取过滤器名称,，如：xxx
             ,
@@ -799,6 +799,7 @@
             };
 
         //添加事件
+        //fn 有值 就只是添加一个事件到config.event对象中 不执行 这里仅仅是监听
         if (fn) {
             config.event[eventName] = config.event[eventName] || {};
 
@@ -807,7 +808,8 @@
             config.event[eventName][filterName] = [fn];
             return this;
         }
-
+        
+        //fn 没有传值 就是代表要执行事件
         //执行事件回调
         layui.each(config.event[eventName], function (key, item) {
             //执行当前模块的全部事件
@@ -816,7 +818,8 @@
                 return;
             }
 
-            //执行指定事件
+            //执行指定事件 这里其实只是执行了一个事件，因为框架不再支持多次事件监听
+            //即 一个filterName 只绑定一个事件
             key === '' && layui.each(item, callback);
             (filterName && key === filterName) && layui.each(item, callback);
         });
