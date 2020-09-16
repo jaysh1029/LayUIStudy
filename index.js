@@ -6,3 +6,5 @@ layui.loadLib('jquery', {
         color: "#E6E6E6"
     });
 });
+
+console.log(layui.router('http://www.xxx.com/start/#/home/homepage1?action=aa&dd=s#top'))

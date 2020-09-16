@@ -147,7 +147,8 @@
                 };
 
                 //绑定对象到layui 设置状态缓存
-                //执行factory函数 这里可能执行的是依赖模块的相关函数
+                //执行factory函数就是定义模块的代码 代码内容执行完之后 
+                //调用function 并传入2个参数 通过setApp 将模块绑定到layui对象上并设置状态缓存           
                 typeof factory === 'function' && factory(function (app, exports) {
 
                     setApp(app, exports);
@@ -243,9 +244,9 @@
             var readyRegExp = navigator.platform === 'PLaySTATION 3' ? /^complete$/ : /^(complete|loaded)$/
             if (e.type === 'load' || (readyRegExp.test((e.currentTarget || e.srcElement).readyState))) {
                 config.modules[item] = url;
-                //head.removeChild(node);
+                head.removeChild(node);
                 (function poll() {
-                    console.log("onScriptLoad11");
+
                     if (++timeout > config.timeout * 1000 / 4) {
                         return error(item + ' is not a valid module');
                     };
@@ -327,7 +328,6 @@
             config.modules[item] = url;
         } else { //缓存
             (function poll() {
-                console.log("else11");
                 if (++timeout > config.timeout * 1000 / 4) {
                     return error(item + ' is not a valid module');
                 };
@@ -367,7 +367,13 @@
         if (typeof fn !== 'function') return that;
 
         //轮询css是否加载完毕
+        /** 
+         * @Author: 史林枫 
+         * @Date: 2020-09-16 16:12:10 
+         * @Desc: 下面的 1989 width属性是在要加载的css文件中设置的 id要跟这里调用的一致
+         */
         (function poll() {
+            console.log("link");
             if (++timeout > config.timeout * 1000 / 100) {
                 return error(href + ' timeout');
             };
@@ -386,7 +392,7 @@
 
      * @Author: 史林枫 
      * @Date: 2020-04-02 09:06:48 
-     * @Desc: 重新执行模块的工厂函数，实际上是一个回调函数 用来将模块绑定到layui对象以及设置config缓存的
+     * @Desc: 重新执行模块的工厂函数，相当于重新加载模块
      * @Desc: 若layui中包含模块，并且config.callback含有此模块的函数，则返回这个函数 
      * @Desc: 这个函数好像没怎么用过，因为用use和define加载模块的时候已经执行过了
      */
@@ -403,7 +409,7 @@
      * @Author: 史林枫 
      * @Date: 2020-04-02 09:09:23 
      * @Desc: css内部加载器 
-     * @Desc:  加载layui自带的css 内部调用layui.link
+     * @Desc:  加载layui自带的css 里面调用layui.link方法
      */
     Layui.prototype.addcss = function (firename, fn, cssname) {
         return layui.link(config.dir + 'css/' + firename, fn, cssname);
@@ -488,9 +494,9 @@
 
      * @Author: 史林枫 
      * @Date: 2020-04-05 11:40:47 
-     * @Desc: location.hash 路由解析 返回一个路由的数据对象
+     * @Desc: location.hash 路由解析 返回一个路由的数据对象 传入的hash值必须以#开头
      * @Desc:  比如 hash = #/home/homepage1?name=tom 最后被转化为：
-     * @Desc: data: {path:{},search:{},hash:"",href:"/home/homepage1?name=tom"}
+     * @Desc: data: {path:["home", "homepage1?name=tom"],search:{},hash:"",href:"/home/homepage1?name=tom"}
      * @Desc: 如果这里hash 是 /#/home/homepage1?name=tom (比前面多一个/)
      * @Desc: 此时 data.hash = #/home/homepage1?name=tom
      */
@@ -511,9 +517,9 @@
         data.href = '/' + hash; // 在hash开头加上/
 
         /*
-         将hash中以#开头的内容全部替换掉
-         比如 hash=http://www.xxx.com/start/#/home/homepage1
-         替换后为http: //www.xxx.com/start/
+         将hash中除第一个，以#开头的内容全部替换掉
+         比如 hash=#/home/homepage1#top
+         替换后为#/home/homepage1
          但这里没什么用，可能会考虑到hash中有多个#的问题，系统只保留第一个后面的
          比如 hash只原本为 #/test/test/test/#/test/  到这里已经被处理为
          /test/test/test/#/test/   到下面一句处理之后就会变成 /test/test/test/
@@ -523,6 +529,7 @@
 
         //提取 Hash 结构 
         // 这里把hash中的参数放置到data.search中，非url参数 放入path中，作为路由
+        //这里是为了匹配这种情况 #/action=actionName  就会把action:actionName 放到search中
         that.each(hash, function (index, item) {
             /^\w+=/.test(item) ? function () {
                 item = item.split('=');
@@ -539,12 +546,15 @@
      * @Date: 2020-04-05 20:39:42 
      * @Desc: URL 解析 将一个url 分解成 路径数组，参数数组，hash结构 
      * @Desc: 如 URL：https://www.baidu.com/s/admin#/home/page/login?wd=test&ws=abc
-     * @Desc: 会被解析为 {"pathname":["s","admin#","home","page","login"],"search":{"wd":"test","ws":"abc"},"hash":{"path":["home","page","login?wd=test&ws=abc"],"search":{},"hash":"","href":"/home/page/login?wd=test&ws=abc"}}
+     * @Desc: 会被解析为 {
+     * "pathname":["s","admin#","home","page","login"],
+     * "search":{"wd":"test","ws":"abc"},
+     * "hash":{"path":["home","page","login?wd=test&ws=abc"],"search":{},"hash":"","href":"/home/page/login?wd=test&ws=abc"}}
      */
     Layui.prototype.url = function (href) {
         var that = this,
             data = {
-                //提取 url 路径
+                //提取 url 路径 以/开始的部分
                 pathname: function () {
                         var pathname = href ?
 
@@ -558,7 +568,7 @@
                         return pathname.replace(/^\//, '').split('/');
                     }()
 
-                    //提取 url 参数
+                    //提取 url 参数 以?开始的部分
                     ,
                 search: function () {
                         var obj = {},
@@ -638,7 +648,7 @@
     //设备信息
     Layui.prototype.device = function (key) {
         var agent = navigator.userAgent.toLowerCase()
-
+            //mozilla/5.0 (windows nt 10.0; wow64) applewebkit/537.36 (khtml, like gecko) chrome/78.0.3904.108 safari/537.36
             //获取版本号
             ,
             getVersion = function (label) {
@@ -752,7 +762,11 @@
         }
     };
 
-    //自定义模块事件
+    /** 
+     * @Author: 史林枫 
+     * @Date: 2020-09-16 17:18:21 
+     * @Desc: 自定义模块事件 执行时不带参数 
+     */
     Layui.prototype.onevent = function (modName, events, callback) {
         if (typeof modName !== 'string' ||
             typeof callback !== 'function') return this;
@@ -760,11 +774,20 @@
         return Layui.event(modName, events, null, callback);
     };
 
-    //执行自定义模块事件
+    //
+    /** 
+     * @Author: 史林枫 
+     * @Date: 2020-09-16 17:17:42 
+     * @Param modName  如 admin 这是自己定义的模块名称
+     * @Param events 如 tabsPage(setMenustatus) tabsPage({*}) 调用的是模块内定义的事件
+     * @Param params 参数
+     * @param fn 回调函数
+     * @Desc:  执行自定义模块事件
+     */
     Layui.prototype.event = Layui.event = function (modName, events, params, fn) {
         var that = this,
             result = null,
-            filter = events.match(/\((.*)\)$/) || [] //提取事件过滤器字符结构，如：select(xxx)
+            filter = events.match(/\((.*)\)$/) || [] //提取事件过滤器字符结构，如：select(xxx) 提取的是(xxx)
             ,
             eventName = (modName + '.' + events).replace(filter[0], '') //获取事件名称，如：form.select
             ,
