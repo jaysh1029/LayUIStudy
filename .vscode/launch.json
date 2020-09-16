@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://www.linfeng.com",
+            "url": "http://localhost:8101/",
             "webRoot": "${workspaceFolder}"
         }
     ]

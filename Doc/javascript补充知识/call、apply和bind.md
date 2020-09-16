@@ -1,3 +1,8 @@
+# 概述
+
+## call apply bind  主要用来改变this指向 其他不变
+    
+
 # 关于this
 1. 默认情况this指向全局对象 window
 2. 使用对象调用函数时，一般this就是这个对象

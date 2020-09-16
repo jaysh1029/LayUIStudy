@@ -11,5 +11,5 @@ layui.define(function(exports){
   layui.config({
     dir: cache.dir.replace(/lay\/dest\/$/, '')
   });
-  exports('layui.all', layui.v);
+  exports('layui.all', layui.v);//v 是版本号
 });
