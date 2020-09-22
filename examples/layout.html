@@ -10,7 +10,13 @@
     <link rel="stylesheet" href="../css/layui.css" media="all">
     <link rel="stylesheet" href="../css/global.css">
     <style>
-        .layout-demo .layui-row{margin-bottom: 10px;}
+        .layout-demo .layui-row {
+            margin-bottom: 10px;
+        }
+
+        fieldset {
+            margin-top: 50px !important;
+        }
     </style>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
@@ -48,6 +54,21 @@
             </div>
             <div class="layui-col-xs3">
                 <div class="grid-demo">3/12</div>
+            </div>
+        </div>
+
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>移动设备、桌面端的组合响应式展现</legend>
+        </fieldset>
+        <div class="layui-row">
+            <div class="layui-col-xs12 layui-col-md8">
+                <div class="grid-demo grid-demo-bg1">移动：12/12 桌面：8/12</div>
+            </div>
+            <div class="layui-col-xs6 layui-col-md4">
+                <div class="grid-demo">移动： 6/12 桌面：4/12</div>
+            </div>
+            <div class="layui-col-xs6 layui-col-md12">
+                <div class="grid-demo grid-demo-bg2">移动：6/12 桌面：12/12</div>
             </div>
         </div>
 
@@ -219,7 +240,55 @@
         <fieldset class="layui-elem-field layui-field-title">
             <legend>栅格嵌套</legend>
         </fieldset>
+        <div class="layui-row">
+            <div class="layui-col-md5">
+                <div class="layui-row grid-demo">
+                    <div class="layui-col-md3">
+                        <div class="grid-demo grid-demo-bg1">内部列</div>
+                    </div>
+                    <div class="layui-col-md9">
+                        <div class="grid-demo grid-demo-bg2">内部列</div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="grid-demo grid-demo-bg3">内部列</div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md7">
+                <div class="layui-row grid-demo grid-demo-bg1">
 
+                    <div class="layui-col-md12">
+                        <div class="grid-demo">内部列</div>
+                    </div>
+                    <div class="layui-col-md9">
+                        <div class="grid-demo grid-demo-bg2">内部列</div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <div class="grid-demo grid-demo-bg3">内部列</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>流体容器(宽度自适应，不固定)</legend>
+        </fieldset>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <div class="layui-col-sm3">
+                    <div class="grid-demo grid-demo-bg1">25%</div>
+                </div>
+                <div class="layui-col-sm3">
+                    <div class="grid-demo">25%</div>
+                </div>
+                <div class="layui-col-sm3">
+                    <div class="grid-demo grid-demo-bg1">25%</div>
+                </div>
+                <div class="layui-col-sm3">
+                    <div class="grid-demo">25%</div>
+                </div>
+            </div>
+
+        </div>
     </div>
     <!--container end-->
 </body>
