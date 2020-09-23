@@ -33,7 +33,7 @@
 		"prefix": "fieldset",
 		"body": [
 			"<fieldset class=\"layui-elem-field$1\">",
-			"<legend>$2</legend>",
+			"    <legend>$2</legend>",
 			"</fieldset>"
 		],
 		"description": "fieldset legend"
@@ -52,5 +52,47 @@
 			"<i class=\"layui-icon$1\"></i>"
 		],
 		"description": "layui-button with class"
-	}
+	},
+	
+		"layui-label with class":{
+			"prefix":"labell",
+			"body":[
+				"<label class=\"layui-form-label\">$1</label>"
+			],
+			"description":"layui label with class"
+		}
+		,
+	
+		"layui div form item":{
+			"prefix":"divitem",
+			"body":[
+				"<div class=\"layui-form-item\">",
+				"    $1",
+				"</div>"
+			],
+			"description":"layui div form item"
+		}
+		,
+	
+		"layui div input block":{
+			"prefix":"divblock",
+			"body":[
+				"<div class=\"layui-input-block\">",
+				"    $1",
+				"</div>"
+			],
+			"description":"layui div input block"
+		}
+		,
+	
+		"layui div input inline":{
+			"prefix":"divinline",
+			"body":[
+				"<div class=\"layui-input-inline\">",
+				"    $1",
+				"</div>"
+			],
+			"description":"layui div input inline"
+		}
+
 }
