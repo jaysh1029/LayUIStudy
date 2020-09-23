@@ -1,5 +1,4 @@
-{
-
+{	
 	"div with class": {
 		"prefix": "div",
 		"body": [
@@ -13,15 +12,15 @@
 			"<!DOCTYPE html>",
 			"<html>",
 			"<head>",
-			"	<meta charset=\"UTF-8\">",
-			"	<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1\">"
-			"	<title>$1</title>",
-			"	<meta name=\"renderer\" content=\"webkit\">",
-			"	<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">",
-			"	<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black\">",
-			"	<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">",
-			"	<meta name=\"format-detection\" content=\"telephone=no\">",
-			"	<link rel=\"stylesheet\" href=\"$2\" media=\"all\">",
+			"    <meta charset=\"UTF-8\">",
+			"    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1\">",
+			"    <title>$1</title>",
+			"    <meta name=\"renderer\" content=\"webkit\">",
+			"    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">",
+			"    <meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black\">",
+			"    <meta name=\"apple-mobile-web-app-capable\" content=\"yes\">",
+			"    <meta name=\"format-detection\" content=\"telephone=no\">",
+			"    <link rel=\"stylesheet\" href=\"$2\" media=\"all\">",
 			"</head>",
 			"<body>",
 			"$3",
@@ -29,5 +28,29 @@
 			"</html>"
 		],
 		"description": "html5-layui"
+	},
+	"fieldset with class": {
+		"prefix": "fieldset",
+		"body": [
+			"<fieldset class=\"layui-elem-field$1\">",
+			"<legend>$2</legend>",
+			"</fieldset>"
+		],
+		"description": "fieldset legend"
+	},
+	"layui-button with class": {
+		"prefix": "button",
+		"body": [
+			"<button type=\"button\" class=\"layui-btn$1\">$2</button>"
+		],
+		"description": "layui-button with class"
+	}
+	,
+	"layui-icon with class": {
+		"prefix": "icon",
+		"body": [
+			"<i class=\"layui-icon$1\"></i>"
+		],
+		"description": "layui-button with class"
 	}
 }
