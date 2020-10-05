@@ -1,4 +1,4 @@
-{	
+{
 	"div with class": {
 		"prefix": "div",
 		"body": [
@@ -41,11 +41,10 @@
 	"layui-button with class": {
 		"prefix": "button",
 		"body": [
-			"<button type=\"button\" class=\"layui-btn$1\">$2</button>"
+			"<button class=\"layui-btn$1\">$2</button>"
 		],
 		"description": "layui-button with class"
-	}
-	,
+	},
 	"layui-icon with class": {
 		"prefix": "icon",
 		"body": [
@@ -53,46 +52,60 @@
 		],
 		"description": "layui-button with class"
 	},
-	
-		"layui-label with class":{
-			"prefix":"labell",
-			"body":[
-				"<label class=\"layui-form-label\">$1</label>"
-			],
-			"description":"layui label with class"
-		}
-		,
-	
-		"layui div form item":{
-			"prefix":"divitem",
-			"body":[
-				"<div class=\"layui-form-item\">",
-				"    $1",
-				"</div>"
-			],
-			"description":"layui div form item"
-		}
-		,
-	
-		"layui div input block":{
-			"prefix":"divblock",
-			"body":[
-				"<div class=\"layui-input-block\">",
-				"    $1",
-				"</div>"
-			],
-			"description":"layui div input block"
-		}
-		,
-	
-		"layui div input inline":{
-			"prefix":"divinline",
-			"body":[
-				"<div class=\"layui-input-inline\">",
-				"    $1",
-				"</div>"
-			],
-			"description":"layui div input inline"
-		}
-
+	"layui-label with class": {
+		"prefix": "labell",
+		"body": [
+			"<label class=\"layui-form-label\">$1</label>"
+		],
+		"description": "layui label with class"
+	},
+	"layui div form item": {
+		"prefix": "divitem",
+		"body": [
+			"<div class=\"layui-form-item\">",
+			"    $1",
+			"</div>"
+		],
+		"description": "layui div form item"
+	},
+	"layui div input block": {
+		"prefix": "divblock",
+		"body": [
+			"<div class=\"layui-input-block\">",
+			"    $1",
+			"</div>"
+		],
+		"description": "layui div input block"
+	},
+	"layui div input inline": {
+		"prefix": "divinline",
+		"body": [
+			"<div class=\"layui-input-inline\">",
+			"    $1",
+			"</div>"
+		],
+		"description": "layui div input inline"
+	},
+	"layui-nav": {
+		"prefix": "navul",
+		"body": [
+			"<ul class=\"layui-nav\">",
+			"    <li class=\"layui-nav-item$1\"><a href=\"$2\">$3</a></li>",
+			"    <li class=\"layui-nav-item\">",
+			"        <a href=\"javascript:;\">$4</a>",
+			"        <dl class=\"layui-nav-child\">",
+			"            <dd><a href=\"$5\">$6</a></dd>",
+			"        </dl>",
+			"    </li>",
+			"</ul>"
+		],
+		"description": "layui-nav"
+	},
+	"layui-li": {
+		"prefix": "navli",
+		"body": [
+			"<li class=\"layui-nav-item$1\"><a href=\"$2\">$3</a></li>",
+		],
+		"description": "layui-li"
+	}
 }
