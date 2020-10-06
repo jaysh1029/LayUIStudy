@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>数据操作</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../css/layui.css" media="all">
+</head>
+
+<body>
+    
+    <div class="layui-btn-group demoTable">
+        <button class="layui-btn" data-type="getCheckData">获取选中行数据</button>
+        <button class="layui-btn" data-type="getCheckLength">获取选中行数目</button>
+        <button class="layui-btn" data-type="isAll">验证是否全选</button>
+    </div>
+    <table class="layui-hide" id="idTest" lay-filter="demo"></table>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+
+
+    <script src="../../layui.js"></script>
+    <script>
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table,
+                layer = layui.layer;
+            table.render({
+                elem: '#idTest',
+                url: 'user.json',
+                
+                cols: [
+                    [{
+                            type: 'checkbox',
+                            fixed: 'left'
+                        },
+                        {
+                            field: 'id',
+                            width: 80,
+                            title: 'ID',
+                            sort: true,
+                            fixed: true
+                        },
+                        {
+                            field: 'username',
+                            width: 80,
+                            title: '用户名'
+                        },
+                        {
+                            field: 'sex',
+                            width: 80,
+                            title: '性别',
+                            sort: true
+                        },
+                        {
+                            field: 'city',
+                            width: 80,
+                            title: '城市'
+                        },
+                        {
+                            field: 'sign',
+                            width: 160,
+                            title: '签名'
+                        },
+                        {
+                            field: 'experience',
+                            width: 80,
+                            title: '积分',
+                            sort: true
+                        },
+                        {
+                            field: 'classify',
+                            title: '职业',
+                            width: 80
+                        },
+                        {
+                            field: 'wealth',
+                            width: 137,
+                            title: '财富',
+                            sort: true
+                        },
+                        {
+                            field: 'score',
+                            title: '评分',
+                            sort: true,
+                            fixed: 'right'  //这个fixed会显示两次 一次是原始表格中的列 一次是右侧固定的列
+                        },
+                        {
+                            field: 'right',
+                            width: 178,
+                            align: 'center',
+                            toolbar: '#barDemo'
+                        }
+                    ]
+                ],
+                page: true
+            });
+            // 工具栏事件
+
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj);
+            })
+
+
+
+
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'detail') {
+                    layer.msg('ID: ' + data.id + ' 的查看操作');
+                } else if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        obj.del();
+                        layer.close(index);
+                    });
+                } else if (obj.event === 'edit') {
+                    layer.alert('编辑行：<br>' + JSON.stringify(data));
+                }
+            });
+
+            var $ = layui.$,
+                active = {
+                    'getCheckData': function () {
+                        var checkStatus = table.checkStatus('idTest');
+                        var data = checkStatus.data;
+                        layer.alert(JSON.stringify(data));
+                    },
+                    'getCheckLength': function () {
+                        var checkStatus = table.checkStatus('idTest');
+                        var data = checkStatus.data;
+                        layer.msg('选中了' + data.length + '个');
+                    },
+                    'isAll': function () {
+                        var checkStatus = table.checkStatus('idTest');
+                        layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                    }
+
+                }
+
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            })
+
+
+        });
+    </script>
+</body>
+
+</html>
