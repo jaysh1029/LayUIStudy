@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>模板引擎</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../css/layui.css" media="all">
+</head>
+
+<body>
+    <script type="text/html" id="demo">
+        <h3>{{d.title}}</h3>
+        <ul>
+            {{# layui.each(d.list,function(index,item){ }}
+            <li>
+                <span>{{item.modname}}</span>
+                <span>{{item.alias}}:</span>
+                <span>{{item.site||''}}</span>
+            </li>
+            {{# });}}
+
+            {{# if(d.list.length==0){}}
+            无数据
+            {{# } }}
+        </ul>
+    </script>
+
+    <div id="view"></div>
+    <script src="../layui.js"></script>
+    <script>
+        layui.use('laytpl', function () {
+            var laytpl = layui.laytpl;
+            var data = {
+                "title": "Layui常用模块",
+                "list": [{
+                    "modname": "弹层",
+                    "alias": "layer",
+                    "site": "layer.layui.com"
+                }, {
+                    "modname": "表单",
+                    "alias": "form"
+                }, {
+                    "modname": "分页",
+                    "alias": "laypage"
+                }, {
+                    "modname": "日期",
+                    "alias": "laydate"
+                }, {
+                    "modname": "上传",
+                    "alias": "upload"
+                }]
+            };
+
+            var getTpl = demo.innerHTML,
+                view = document.getElementById('view');
+            laytpl(getTpl).render(data, function (html) {
+                view.innerHTML = html;
+            });
+        });
+    </script>
+</body>
+
+</html>
